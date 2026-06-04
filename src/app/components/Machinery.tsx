@@ -56,7 +56,7 @@ export function Machinery() {
       category: t("cat6"),
       specs: t("machine6_specs"),
       desc: t("machine6_desc"),
-      model: "/models/maquinaria/excavator_3d_model (1).glb",
+      model: "/models/maquinaria/excavator_3d_model_2.glb",
     },
   ];
 
