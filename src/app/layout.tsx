@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import '../styles/index.css'
-import { WhatsAppFloat } from './components/WhatsAppFloat'
 
 export const metadata: Metadata = {
   title: 'MAQUIPRO - Maquinaria Pesada de Alto Rendimiento',
@@ -13,7 +12,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body>
         {children}
-        <WhatsAppFloat />
       </body>
     </html>
   )

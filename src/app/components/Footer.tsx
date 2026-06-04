@@ -1,6 +1,12 @@
+"use client";
 import { Phone, Mail, MapPin, Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export function Footer() {
+  const t = useTranslations("Footer");
+  const tNav = useTranslations("Navbar");
+
   return (
     <footer className="bg-[#090909] border-t border-white/10">
       <div className="max-w-7xl mx-auto px-6 pt-16 pb-8">
@@ -11,7 +17,7 @@ export function Footer() {
               <img src="/logo_normal.webp" alt="MAQUIPRO" className="h-24 w-auto" />
             </div>
             <p className="font-['Barlow'] text-[#9a9a8a] text-sm leading-relaxed mb-6">
-              Distribuimos maquinaria amarilla y pesada de alta calidad con respaldo técnico completo en toda Latinoamérica.
+              {t("description")}
             </p>
             <div className="flex gap-3">
               {[Facebook, Instagram, Linkedin, Youtube].map((Icon, i) => (
@@ -29,23 +35,24 @@ export function Footer() {
           {/* Links */}
           <div>
             <h4 className="font-['Barlow_Condensed'] font-bold text-white uppercase tracking-widest text-sm mb-6">
-              Navegación
+              {t("nav_title")}
             </h4>
             <ul className="space-y-3">
               {[
-                { label: "Inicio", href: "#inicio" },
-                { label: "Nosotros", href: "#nosotros" },
-                { label: "Maquinaria", href: "#maquinaria" },
-                { label: "Por qué nosotros", href: "#ventajas" },
-                { label: "Contacto", href: "#contacto" },
+                { label: tNav("inicio"), href: "#inicio" },
+                { label: tNav("nosotros"), href: "#nosotros" },
+                { label: tNav("maquinaria"), href: "#maquinaria" },
+                { label: tNav("ventajas"), href: "#ventajas" },
+                { label: tNav("centroEducacion"), href: "/centro-educacion" },
+                { label: tNav("contacto"), href: "#contacto" },
               ].map((l) => (
                 <li key={l.href}>
-                  <a
+                  <Link
                     href={l.href}
                     className="font-['Barlow'] text-[#9a9a8a] text-sm hover:text-[#f5b800] transition-colors"
                   >
                     {l.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -54,24 +61,24 @@ export function Footer() {
           {/* Equipment */}
           <div>
             <h4 className="font-['Barlow_Condensed'] font-bold text-white uppercase tracking-widest text-sm mb-6">
-              Equipos
+              {t("equip_title")}
             </h4>
             <ul className="space-y-3">
               {[
-                "Excavadoras Hidráulicas",
-                "Bulldozers",
-                "Motoniveladoras",
-                "Cargadores Frontales",
-                "Compactadoras",
-                "Grúas sobre Oruga",
+                t("equip1"),
+                t("equip2"),
+                t("equip3"),
+                t("equip4"),
+                t("equip5"),
+                t("equip6"),
               ].map((e) => (
                 <li key={e}>
-                  <a
+                  <Link
                     href="#maquinaria"
                     className="font-['Barlow'] text-[#9a9a8a] text-sm hover:text-[#f5b800] transition-colors"
                   >
                     {e}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -80,7 +87,7 @@ export function Footer() {
           {/* Contact info */}
           <div>
             <h4 className="font-['Barlow_Condensed'] font-bold text-white uppercase tracking-widest text-sm mb-6">
-              Contacto
+              {t("contact_title")}
             </h4>
             <ul className="space-y-4">
               {[
@@ -111,14 +118,15 @@ export function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-['Barlow'] text-[#555] text-xs">
-            © {new Date().getFullYear()} MAQUIPRO. Todos los derechos reservados.
+            © {new Date().getFullYear()} MAQUIPRO. {t("rights")}
           </p>
           <div className="flex gap-6">
-            {["Política de privacidad", "Términos y condiciones"].map((t) => (
-              <a key={t} href={t === "Política de privacidad" ? "/politica-de-datos" : "#"} className="font-['Barlow'] text-[#555] text-xs hover:text-[#f5b800] transition-colors">
-                {t}
-              </a>
-            ))}
+            <Link href="/politica-de-datos" className="font-['Barlow'] text-[#555] text-xs hover:text-[#f5b800] transition-colors">
+              {t("privacy")}
+            </Link>
+            <a href="#" className="font-['Barlow'] text-[#555] text-xs hover:text-[#f5b800] transition-colors">
+              {t("terms")}
+            </a>
           </div>
         </div>
       </div>

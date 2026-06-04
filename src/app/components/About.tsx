@@ -1,4 +1,9 @@
+"use client";
+import { useTranslations } from "next-intl";
+
 export function About() {
+  const t = useTranslations("About");
+
   return (
     <section id="nosotros" className="py-28 bg-[#f5f0e8] scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
@@ -18,7 +23,7 @@ export function About() {
               15+
             </span>
             <span className="font-['Barlow'] text-[#0e0e0e] text-xs uppercase tracking-widest text-center leading-tight">
-              Años en<br />el mercado
+              {t("years")}<br />{t("years2")}
             </span>
           </div>
           {/* Border decoration */}
@@ -28,38 +33,32 @@ export function About() {
         {/* Text side */}
         <div>
           <p className="font-['Barlow_Condensed'] font-bold tracking-[0.3em] uppercase text-[#f5b800] text-lg mb-4">
-            Quiénes somos
+            {t("subtitle")}
           </p>
           <h2
             className="font-['Barlow_Condensed'] font-extrabold uppercase leading-[0.9] text-[#1a1a1a] mb-8"
             style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)" }}
           >
-            Líderes en<br />
-            <span className="text-[#f5b800]">Maquinaria</span><br />
-            Pesada
+            {t("title1")}<br />
+            <span className="text-[#f5b800]">{t("title2")}</span><br />
+            {t("title3")}
           </h2>
           <div className="space-y-5 font-['Barlow'] text-[#555] text-base leading-relaxed">
-            <p>
-              En <strong className="text-[#1a1a1a]">MAQUIPRO</strong> somos especialistas en la comercialización y distribución de maquinaria amarilla y pesada de las marcas líderes a nivel mundial. Con más de 15 años de experiencia en el sector, hemos consolidado nuestra presencia en toda Latinoamérica.
-            </p>
-            <p>
-              Ofrecemos equipos de excavación, movimiento de tierra, compactación y transporte, respaldados por un equipo técnico altamente capacitado que garantiza el óptimo rendimiento de cada unidad.
-            </p>
-            <p>
-              Nuestra prioridad es brindar soluciones integrales: desde la selección del equipo ideal para tu proyecto hasta el soporte post-venta y el suministro de repuestos originales.
-            </p>
+            <p dangerouslySetInnerHTML={{ __html: t.raw("p1") }} />
+            <p>{t("p2")}</p>
+            <p>{t("p3")}</p>
           </div>
 
           <div className="mt-10 grid grid-cols-2 gap-6">
             {[
-              { n: "Servicio técnico especializado" },
-              { n: "Repuestos originales garantizados" },
-              { n: "Financiamiento disponible" },
-              { n: "Entrega en todo el país" },
+              t("check1"),
+              t("check2"),
+              t("check3"),
+              t("check4"),
             ].map((item) => (
-              <div key={item.n} className="flex items-start gap-3">
+              <div key={item} className="flex items-start gap-3">
                 <div className="w-1 h-full min-h-[20px] bg-[#f5b800] flex-shrink-0 mt-1" />
-                <span className="font-['Barlow'] text-[#555] text-sm">{item.n}</span>
+                <span className="font-['Barlow'] text-[#555] text-sm">{item}</span>
               </div>
             ))}
           </div>

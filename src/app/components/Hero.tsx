@@ -1,6 +1,11 @@
+"use client";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export function Hero() {
+  const t = useTranslations("Hero");
+
   return (
     <section
       id="inicio"
@@ -23,46 +28,45 @@ export function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-24 pb-32 grid lg:grid-cols-2 gap-16 items-center">
         <div>
           <p className="font-['Barlow_Condensed'] font-bold tracking-[0.3em] uppercase text-[#f5b800] text-lg mb-6">
-            Maquinaria Pesada de Alto Rendimiento
+            {t("subtitle")}
           </p>
           <h1
             className="font-['Barlow_Condensed'] font-extrabold uppercase leading-[0.9] text-white mb-8"
             style={{ fontSize: "clamp(3.5rem, 8vw, 7rem)" }}
           >
-            Potencia
+            {t("title1")}
             <br />
-            <span className="text-[#f5b800]">sin</span>
+            <span className="text-[#f5b800]">{t("title2")}</span>
             <br />
-            Límites
+            {t("title3")}
           </h1>
           <p className="font-['Barlow'] text-[#c8c0b0] text-lg leading-relaxed max-w-lg mb-10">
-            Distribuimos maquinaria amarilla y pesada de primera calidad: excavadoras, bulldozers, motoniveladoras y más.
-            Respaldo técnico completo y cobertura en toda Latinoamérica.
+            {t("description")}
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <a
+            <Link
               href="#maquinaria"
               className="inline-block bg-[#f5b800] hover:bg-[#ffc900] text-[#0e0e0e] px-8 py-4 font-['Barlow_Condensed'] font-bold tracking-widest uppercase transition-colors"
             >
-              Ver Maquinaria
-            </a>
-            <a
+              {t("ctaMaquinaria")}
+            </Link>
+            <Link
               href="#contacto"
               className="inline-block border border-[#f5b800] text-[#f5b800] hover:bg-[#f5b800] hover:text-[#0e0e0e] px-8 py-4 font-['Barlow_Condensed'] font-bold tracking-widest uppercase transition-colors"
             >
-              Solicitar Cotización
-            </a>
+              {t("ctaCotizacion")}
+            </Link>
           </div>
         </div>
 
         {/* Stats */}
         <div className="hidden lg:grid grid-cols-2 gap-px bg-white/10">
           {[
-            { value: "15+", label: "Años de experiencia" },
-            { value: "500+", label: "Equipos vendidos" },
-            { value: "18", label: "Países atendidos" },
-            { value: "24/7", label: "Soporte técnico" },
+            { value: "15+", label: t("stat1") },
+            { value: "500+", label: t("stat2") },
+            { value: "18", label: t("stat3") },
+            { value: "24/7", label: t("stat4") },
           ].map((s) => (
             <div key={s.label} className="bg-[#0e0e0e]/70 backdrop-blur-sm p-8 flex flex-col justify-center">
               <span
@@ -78,13 +82,13 @@ export function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <a
+      <Link
         href="#nosotros"
         className="absolute bottom-10 left-1/2 -translate-x-1/2 text-[#f5b800] animate-bounce z-10"
         aria-label="Ir abajo"
       >
         <ChevronDown size={32} />
-      </a>
+      </Link>
     </section>
   );
 }

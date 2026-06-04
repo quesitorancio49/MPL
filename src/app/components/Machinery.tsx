@@ -1,63 +1,68 @@
+"use client";
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
-
-const machines = [
-  {
-    id: 1,
-    name: "Excavadora Hidráulica",
-    category: "Excavación",
-    specs: "20–35 ton | 120–200 HP",
-    desc: "Excavadoras de oruga de alto rendimiento para minería, construcción y obra civil. Brazos de largo alcance disponibles.",
-    img: "https://images.unsplash.com/photo-1580901369227-308f6f40bdeb?w=600&h=420&fit=crop&auto=format",
-  },
-  {
-    id: 2,
-    name: "Bulldozer D6–D9",
-    category: "Movimiento de tierra",
-    specs: "180–430 HP | Hoja semiuniversal",
-    desc: "Topadoras de alta potencia para empuje masivo de material, nivelación de terrenos y trabajos de gran envergadura.",
-    img: "https://images.unsplash.com/photo-1680463990599-9d318aaecf71?w=600&h=420&fit=crop&auto=format",
-  },
-  {
-    id: 3,
-    name: "Motoniveladora",
-    category: "Nivelación",
-    specs: "150–200 HP | Hoja 3.66 m",
-    desc: "Precisión milimétrica para la conformación y mantenimiento de vías, plataformas y taludes. Sistema GPS disponible.",
-    img: "https://images.unsplash.com/photo-1605289355446-7aafcd144fc2?w=600&h=420&fit=crop&auto=format",
-  },
-  {
-    id: 4,
-    name: "Cargador Frontal",
-    category: "Carga y transporte",
-    specs: "3.5–7 m³ | 200–350 HP",
-    desc: "Cargadores de rueda para manejo eficiente de material suelto en canteras, puertos y plantas de procesamiento.",
-    img: "https://images.unsplash.com/photo-1560872531-552417aded86?w=600&h=420&fit=crop&auto=format",
-  },
-  {
-    id: 5,
-    name: "Compactadora Vibrante",
-    category: "Compactación",
-    specs: "11–14 ton | Doble tambor",
-    desc: "Rodillos compactadores para bases de carretera, asfalto y rellenos. Alta fuerza centrífuga para máxima densidad.",
-    img: "https://images.unsplash.com/photo-1649017109134-f7686437a966?w=600&h=420&fit=crop&auto=format",
-  },
-  {
-    id: 6,
-    name: "Grúa Sobre Oruga",
-    category: "Izaje",
-    specs: "50–150 ton | Pluma reticulada",
-    desc: "Grúas de alta capacidad para izaje en construcción, industria petrolera y proyectos de infraestructura.",
-    img: "https://images.unsplash.com/photo-1563391017873-6e6beab67fed?w=600&h=420&fit=crop&auto=format",
-  },
-];
-
-const categories = ["Todos", "Excavación", "Movimiento de tierra", "Nivelación", "Carga y transporte", "Compactación", "Izaje"];
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+import { ModelViewer } from "./ModelViewer";
 
 export function Machinery() {
+  const t = useTranslations("Machinery");
   const [active, setActive] = useState("Todos");
 
-  const filtered = active === "Todos" ? machines : machines.filter((m) => m.category === active);
+  const machines = [
+    {
+      id: 1,
+      name: t("machine1_name"),
+      category: t("cat1"),
+      specs: t("machine1_specs"),
+      desc: t("machine1_desc"),
+      model: "/models/maquinaria/excavator_1.glb",
+    },
+    {
+      id: 2,
+      name: t("machine2_name"),
+      category: t("cat2"),
+      specs: t("machine2_specs"),
+      desc: t("machine2_desc"),
+      model: "/models/maquinaria/excavator_03.glb",
+    },
+    {
+      id: 3,
+      name: t("machine3_name"),
+      category: t("cat3"),
+      specs: t("machine3_specs"),
+      desc: t("machine3_desc"),
+      model: "/models/maquinaria/excavator_3d_model.glb",
+    },
+    {
+      id: 4,
+      name: t("machine4_name"),
+      category: t("cat4"),
+      specs: t("machine4_specs"),
+      desc: t("machine4_desc"),
+      model: "/models/maquinaria/komatsu_sk820_skid_steer_loader.glb",
+    },
+    {
+      id: 5,
+      name: t("machine5_name"),
+      category: t("cat5"),
+      specs: t("machine5_specs"),
+      desc: t("machine5_desc"),
+      model: "/models/maquinaria/massey_ferguson_1525_tractor.glb",
+    },
+    {
+      id: 6,
+      name: t("machine6_name"),
+      category: t("cat6"),
+      specs: t("machine6_specs"),
+      desc: t("machine6_desc"),
+      model: "/models/maquinaria/excavator_3d_model (1).glb",
+    },
+  ];
+
+  const categories = [t("todos"), t("cat1"), t("cat2"), t("cat3"), t("cat4"), t("cat5"), t("cat6")];
+
+  const filtered = active === t("todos") ? machines : machines.filter((m) => m.category === active);
 
   return (
     <section id="maquinaria" className="py-28 bg-[#0f1319] scroll-mt-20">
@@ -66,14 +71,14 @@ export function Machinery() {
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8 mb-14">
           <div>
             <p className="font-['Barlow_Condensed'] font-bold tracking-[0.3em] uppercase text-[#f5b800] text-lg mb-4">
-              Catálogo de equipos
+              {t("subtitle")}
             </p>
             <h2
               className="font-['Barlow_Condensed'] font-extrabold uppercase leading-[0.9] text-white"
               style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)" }}
             >
-              Nuestra<br />
-              <span className="text-[#f5b800]">Maquinaria</span>
+              {t("title1")}<br />
+              <span className="text-[#f5b800]">{t("title2")}</span>
             </h2>
           </div>
 
@@ -106,13 +111,13 @@ export function Machinery() {
           {filtered.map((m) => (
             <div key={m.id} className="group bg-[#0f1319] overflow-hidden">
               <div className="relative overflow-hidden h-56">
-                <img
-                  src={m.img}
+                <ModelViewer
+                  src={m.model}
                   alt={m.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 grayscale-[20%]"
+                  className="w-full h-full"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1319] via-[#0f1319]/20 to-transparent" />
-                <span className="absolute top-4 left-4 bg-[#f5b800] text-[#0e0e0e] font-['Barlow_Condensed'] font-bold text-xs tracking-widest uppercase px-3 py-1">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0f1319] via-transparent to-transparent pointer-events-none" />
+                <span className="absolute top-4 left-4 bg-[#f5b800] text-[#0e0e0e] font-['Barlow_Condensed'] font-bold text-xs tracking-widest uppercase px-3 py-1 z-10">
                   {m.category}
                 </span>
               </div>
@@ -122,13 +127,13 @@ export function Machinery() {
                 </h3>
                 <p className="font-['Barlow'] text-[#f5b800] text-xs tracking-widest uppercase mb-4">{m.specs}</p>
                 <p className="font-['Barlow'] text-[#9a9a8a] text-sm leading-relaxed mb-6">{m.desc}</p>
-                <a
+                <Link
                   href="#contacto"
                   className="inline-flex items-center gap-2 font-['Barlow_Condensed'] font-bold text-sm tracking-widest uppercase text-[#f5b800] border-b border-[#f5b800]/40 hover:border-[#f5b800] pb-0.5 transition-colors group-hover:gap-3"
                 >
-                  Solicitar información
+                  {t("cta")}
                   <ArrowRight size={14} />
-                </a>
+                </Link>
               </div>
             </div>
           ))}

@@ -1,34 +1,39 @@
+"use client";
 import { Globe, Wrench, ShieldCheck, Headphones, Zap } from "lucide-react";
-
-const pillars = [
-  {
-    icon: Globe,
-    title: "Cobertura Latinoamericana",
-    desc: "Presencia en 18 países de América Latina con una red de distribuidores y talleres autorizados listos para atenderte.",
-  },
-  {
-    icon: Wrench,
-    title: "Asesoría Técnica Especializada",
-    desc: "Nuestro equipo de ingenieros te ayuda a seleccionar el equipo ideal para tu proyecto, evitando sobrecostos y errores.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Garantía y Calidad Certificada",
-    desc: "Todos nuestros equipos cuentan con garantía de fábrica y certificación internacional. Cero compromisos con la calidad.",
-  },
-  {
-    icon: Headphones,
-    title: "Soporte Post-Venta 24/7",
-    desc: "Centro de asistencia técnica disponible las 24 horas, los 7 días de la semana para minimizar tiempos muertos.",
-  },
-  {
-    icon: Zap,
-    title: "Entrega Rápida",
-    desc: "Amplio stock disponible para entrega inmediata. Logística especializada en equipos de gran tonelaje a todo el territorio.",
-  },
-];
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 export function ValueProps() {
+  const t = useTranslations("ValueProps");
+
+  const pillars = [
+    {
+      icon: Globe,
+      title: t("pillar1_title"),
+      desc: t("pillar1_desc"),
+    },
+    {
+      icon: Wrench,
+      title: t("pillar2_title"),
+      desc: t("pillar2_desc"),
+    },
+    {
+      icon: ShieldCheck,
+      title: t("pillar3_title"),
+      desc: t("pillar3_desc"),
+    },
+    {
+      icon: Headphones,
+      title: t("pillar4_title"),
+      desc: t("pillar4_desc"),
+    },
+    {
+      icon: Zap,
+      title: t("pillar5_title"),
+      desc: t("pillar5_desc"),
+    },
+  ];
+
   return (
     <section id="ventajas" className="py-28 bg-[#2a2520] relative overflow-hidden scroll-mt-20">
       {/* Background accent */}
@@ -46,13 +51,13 @@ export function ValueProps() {
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
           <p className="font-['Barlow_Condensed'] font-bold tracking-[0.3em] uppercase text-[#f5b800] text-lg mb-4">
-            Por qué elegirnos
+            {t("subtitle")}
           </p>
           <h2
             className="font-['Barlow_Condensed'] font-extrabold uppercase leading-[0.9] text-white"
             style={{ fontSize: "clamp(3rem, 5vw, 4.5rem)" }}
           >
-            Nuestras <span className="text-[#f5b800]">Ventajas</span>
+            {t("title1")} <span className="text-[#f5b800]">{t("title2")}</span>
           </h2>
         </div>
 
@@ -78,18 +83,18 @@ export function ValueProps() {
           <div className="bg-[#f5b800] p-10 flex flex-col justify-between">
             <div>
               <p className="font-['Barlow_Condensed'] font-extrabold uppercase text-[#0e0e0e] leading-tight mb-4" style={{ fontSize: "1.8rem" }}>
-                ¿Listo para potenciar tu proyecto?
+                {t("cta_title")}
               </p>
               <p className="font-['Barlow'] text-[#0e0e0e]/70 text-sm leading-relaxed">
-                Habla con nuestros asesores y recibe una cotización personalizada en menos de 24 horas.
+                {t("cta_desc")}
               </p>
             </div>
-            <a
+            <Link
               href="#contacto"
               className="mt-8 inline-block bg-[#0e0e0e] text-[#f5b800] px-6 py-3 font-['Barlow_Condensed'] font-bold tracking-widest uppercase text-sm hover:bg-[#1a1a1a] transition-colors w-fit"
             >
-              Contactar ahora
-            </a>
+              {t("cta_btn")}
+            </Link>
           </div>
         </div>
       </div>
