@@ -1,7 +1,13 @@
 "use client";
 import { useState } from "react";
-import { Phone, Mail, MapPin, MessageCircle, Send } from "lucide-react";
+import { Phone, Mail, MapPin, MessageCircle, Send, AlertCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  equipment?: string;
+}
 
 export function Contact() {
   const t = useTranslations("Contact");
@@ -12,16 +18,51 @@ export function Contact() {
     equipment: "",
     accepted: false,
   });
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [formError, setFormError] = useState("");
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSent(true);
+  const validate = (): FormErrors => {
+    const errs: FormErrors = {};
+    if (!form.name.trim()) errs.name = "El nombre es obligatorio";
+    if (!form.email.trim()) errs.email = "El correo es obligatorio";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
+      errs.email = "Correo electrónico inválido";
+    if (!form.equipment) errs.equipment = "Selecciona un equipo";
+    return errs;
   };
 
-  const inputClass =
-    "w-full bg-white border border-[#d4cfc8] text-[#1a1a1a] placeholder-[#bbb] px-5 py-3.5 font-['Barlow'] text-sm rounded-lg focus:outline-none focus:border-[#f5b800] focus:ring-2 focus:ring-[#f5b800]/20";
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError("");
+
+    const validationErrors = validate();
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) return;
+
+    setSubmitting(true);
+    try {
+      // Simulate API call — replace with actual fetch when backend is ready
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      setSent(true);
+    } catch {
+      setFormError("Error al enviar el formulario. Intenta de nuevo.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const updateField = <K extends keyof typeof form>(field: K, value: (typeof form)[K]) => {
+    setForm({ ...form, [field]: value });
+    if (errors[field as keyof FormErrors]) {
+      setErrors({ ...errors, [field]: undefined });
+    }
+  };
+
+  const inputClass = (hasError?: boolean) =>
+    `w-full bg-white border ${hasError ? "border-red-400" : "border-[#d4cfc8]"} text-[#1a1a1a] placeholder-[#bbb] px-5 py-3.5 font-['Barlow'] text-sm rounded-lg focus:outline-none focus:border-[#f5b800] focus:ring-2 focus:ring-[#f5b800]/20`;
 
   const equipmentOptions = [
     t("option1"),
@@ -94,17 +135,25 @@ export function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-sm p-8 space-y-5">
+              {formError && (
+                <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <AlertCircle size={16} className="text-red-500 mt-0.5 flex-shrink-0" />
+                  <p className="font-['Barlow'] text-red-600 text-sm">{formError}</p>
+                </div>
+              )}
+
               <div>
                 <label className="block font-['Barlow_Condensed'] font-semibold text-[#1a1a1a] tracking-widest text-sm mb-1.5">
                   {t("form_name")}
                 </label>
                 <input
                   required
-                  className={inputClass}
+                  className={inputClass(!!errors.name)}
                   placeholder={t("form_name_placeholder")}
                   value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) => updateField("name", e.target.value)}
                 />
+                {errors.name && <p className="font-['Barlow'] text-red-500 text-xs mt-1">{errors.name}</p>}
               </div>
               <div>
                 <label className="block font-['Barlow_Condensed'] font-semibold text-[#1a1a1a] tracking-widest text-sm mb-1.5">
@@ -113,21 +162,22 @@ export function Contact() {
                 <input
                   required
                   type="email"
-                  className={inputClass}
+                  className={inputClass(!!errors.email)}
                   placeholder={t("form_email_placeholder")}
                   value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  onChange={(e) => updateField("email", e.target.value)}
                 />
+                {errors.email && <p className="font-['Barlow'] text-red-500 text-xs mt-1">{errors.email}</p>}
               </div>
               <div>
                 <label className="block font-['Barlow_Condensed'] font-semibold text-[#1a1a1a] tracking-widest text-sm mb-1.5">
                   {t("form_phone")}
                 </label>
                 <input
-                  className={inputClass}
+                  className={inputClass()}
                   placeholder={t("form_phone_placeholder")}
                   value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  onChange={(e) => updateField("phone", e.target.value)}
                 />
               </div>
               <div>
@@ -136,7 +186,7 @@ export function Contact() {
                 </label>
                 <div className="relative">
                   <div
-                    className={`${inputClass} cursor-pointer appearance-none pr-11 flex items-center justify-between`}
+                    className={`${inputClass(!!errors.equipment)} cursor-pointer appearance-none pr-11 flex items-center justify-between`}
                     onClick={() => setOpen(!open)}
                   >
                     <span className={form.equipment ? "text-[#1a1a1a]" : "text-[#bbb]"}>
@@ -150,6 +200,7 @@ export function Contact() {
                       <path d="M6 9l6 6 6-6" />
                     </svg>
                   </div>
+                  {errors.equipment && <p className="font-['Barlow'] text-red-500 text-xs mt-1">{errors.equipment}</p>}
                   {open && (
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
@@ -164,7 +215,7 @@ export function Contact() {
                                 : "text-[#1a1a1a] hover:bg-[#f5b800] hover:text-[#0e0e0e]"
                             }`}
                             onClick={() => {
-                              setForm({ ...form, equipment: o });
+                              updateField("equipment", o);
                               setOpen(false);
                             }}
                           >
@@ -179,18 +230,22 @@ export function Contact() {
 
               <button
                 type="submit"
-                disabled={!form.accepted}
-                className="w-full bg-[#f5b800] text-[#0e0e0e] py-3.5 font-['Barlow_Condensed'] font-bold tracking-widest uppercase flex items-center justify-center gap-3 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={!form.accepted || submitting}
+                className="w-full bg-[#f5b800] text-[#0e0e0e] py-3.5 font-['Barlow_Condensed'] font-bold tracking-widest uppercase flex items-center justify-center gap-3 rounded-lg disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
               >
-                <Send size={16} />
-                {t("form_submit")}
+                {submitting ? (
+                  <div className="w-5 h-5 border-2 border-[#0e0e0e] border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Send size={16} />
+                )}
+                {submitting ? "Enviando..." : t("form_submit")}
               </button>
 
               <label className="flex items-start gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={form.accepted}
-                  onChange={(e) => setForm({ ...form, accepted: e.target.checked })}
+                  onChange={(e) => updateField("accepted", e.target.checked)}
                   className="mt-0.5 w-4 h-4 accent-[#f5b800] rounded border-[#d4cfc8]"
                 />
                 <span className="font-['Barlow'] text-[#888] text-sm leading-relaxed">

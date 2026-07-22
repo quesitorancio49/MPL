@@ -13,7 +13,13 @@ export default async function LocaleLayout({
   const { locale } = await params
   if (!hasLocale(routing.locales, locale)) notFound()
 
-  const messages = await getMessages()
+  let messages: Awaited<ReturnType<typeof getMessages>>
+  try {
+    messages = await getMessages()
+  } catch (err) {
+    console.error('Failed to load messages:', err)
+    throw new Error(`Could not load translations for locale "${locale}"`)
+  }
 
   return (
     <NextIntlClientProvider messages={messages}>

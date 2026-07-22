@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { AlertTriangle, RefreshCw } from "lucide-react";
 
 interface Sede {
   nombre: string;
@@ -18,12 +19,14 @@ interface LocationMapProps {
 export function LocationMap({ sedes, className = "" }: LocationMapProps) {
   const t = useTranslations("EducationCenter");
   const mapRef = useRef<HTMLDivElement>(null);
-  const [loaded, setLoaded] = useState(false);
+  const [state, setState] = useState<"loading" | "loaded" | "error">("loading");
 
   useEffect(() => {
+    let mapInstance: L.Map | null = null;
+    let cancelled = false;
+
     const loadMap = async () => {
       try {
-        // Inject Leaflet CSS
         if (!document.querySelector('link[href*="leaflet.css"]')) {
           const link = document.createElement("link");
           link.rel = "stylesheet";
@@ -40,7 +43,7 @@ export function LocationMap({ sedes, className = "" }: LocationMapProps) {
           shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png",
         });
 
-        if (!mapRef.current) return;
+        if (cancelled || !mapRef.current) return;
 
         const map = L.map(mapRef.current, {
           center: [4.0, -60.0],
@@ -63,21 +66,53 @@ export function LocationMap({ sedes, className = "" }: LocationMapProps) {
           `);
         });
 
-        setLoaded(true);
-      } catch (e) {
-        console.error("Failed to load map:", e);
+        mapInstance = map;
+        if (!cancelled) setState("loaded");
+      } catch (err) {
+        console.error("Failed to load map:", err);
+        if (!cancelled) setState("error");
       }
     };
 
     loadMap();
+
+    return () => {
+      cancelled = true;
+      if (mapInstance) {
+        mapInstance.remove();
+      }
+    };
   }, []);
 
   return (
     <div className={`relative ${className}`}>
       <div ref={mapRef} className="w-full h-full z-0 rounded-lg" />
-      {!loaded && (
-        <div className="absolute inset-0 bg-[#1a1a1a] flex items-center justify-center rounded-lg">
-          <p className="font-['Barlow'] text-[#9a9a8a] text-sm">Cargando mapa...</p>
+      {state === "loading" && (
+        <div className="absolute inset-0 bg-[#1a1a1a] flex items-center justify-center rounded-lg z-10">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-2 border-[#f5b800] border-t-transparent rounded-full animate-spin" />
+            <p className="font-['Barlow'] text-[#9a9a8a] text-sm">Cargando mapa...</p>
+          </div>
+        </div>
+      )}
+      {state === "error" && (
+        <div className="absolute inset-0 bg-[#1a1a1a] flex items-center justify-center rounded-lg z-10">
+          <div className="flex flex-col items-center gap-3 text-center px-6">
+            <AlertTriangle size={24} className="text-[#f5b800]" />
+            <p className="font-['Barlow'] text-[#9a9a8a] text-sm">
+              No se pudo cargar el mapa.
+            </p>
+            <button
+              onClick={() => {
+                setState("loading");
+                window.location.reload();
+              }}
+              className="flex items-center gap-2 font-['Barlow_Condensed'] text-[#f5b800] text-sm font-bold tracking-widest uppercase cursor-pointer hover:underline"
+            >
+              <RefreshCw size={14} />
+              Intentar de nuevo
+            </button>
+          </div>
         </div>
       )}
     </div>

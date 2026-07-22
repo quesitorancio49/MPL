@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ModelViewerProps {
   src: string;
@@ -9,14 +9,17 @@ interface ModelViewerProps {
 
 export function ModelViewer({ src, alt, className = "" }: ModelViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     let viewer: HTMLElement | null = null;
+    let cancelled = false;
 
     const init = async () => {
       try {
         await import("@google/model-viewer");
-        if (!containerRef.current) return;
+        if (cancelled || !containerRef.current) return;
 
         const el = document.createElement("model-viewer");
         el.setAttribute("src", src);
@@ -31,19 +34,23 @@ export function ModelViewer({ src, alt, className = "" }: ModelViewerProps) {
         el.style.height = "100%";
         el.style.display = "block";
 
+        el.addEventListener("load", () => {
+          if (!cancelled) setLoading(false);
+        });
+        el.addEventListener("error", () => {
+          if (!cancelled) {
+            setLoading(false);
+            setFailed(true);
+          }
+        });
+
         containerRef.current.appendChild(el);
         viewer = el;
-      } catch {
-        // fallback: show placeholder image
-        if (containerRef.current) {
-          containerRef.current.innerHTML = `
-            <div class="flex items-center justify-center h-full bg-[#1a1a1a] text-[#9a9a8a] font-['Barlow'] text-sm">
-              <div class="text-center p-8">
-                <div class="text-4xl mb-4">🚜</div>
-                <p>Modelo 3D no disponible<br/><span class="text-xs">${alt}</span></p>
-              </div>
-            </div>
-          `;
+      } catch (err) {
+        if (!cancelled) {
+          console.error("Failed to load model-viewer library:", err);
+          setLoading(false);
+          setFailed(true);
         }
       }
     };
@@ -51,6 +58,7 @@ export function ModelViewer({ src, alt, className = "" }: ModelViewerProps) {
     init();
 
     return () => {
+      cancelled = true;
       if (viewer && containerRef.current?.contains(viewer)) {
         containerRef.current.removeChild(viewer);
       }
@@ -58,6 +66,20 @@ export function ModelViewer({ src, alt, className = "" }: ModelViewerProps) {
   }, [src, alt]);
 
   return (
-    <div ref={containerRef} className={`relative overflow-hidden ${className}`} />
+    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a] z-10">
+          <div className="w-8 h-8 border-2 border-[#f5b800] border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+      {failed && (
+        <div className="absolute inset-0 flex items-center justify-center bg-[#1a1a1a] text-[#9a9a8a] font-['Barlow'] text-sm z-10">
+          <div className="text-center p-8">
+            <div className="text-4xl mb-4">🚜</div>
+            <p>Modelo 3D no disponible<br /><span className="text-xs">{alt}</span></p>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
